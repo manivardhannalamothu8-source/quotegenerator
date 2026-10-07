@@ -1,7 +1,17 @@
-const API_URL = "http://localhost:5000/api";
+```javascript
+// ==========================================
+// QUOTE GENERATOR - FRONTEND JAVASCRIPT
+// ==========================================
 
+// Live Render Backend
+const API_URL = "https://quotegenerator-ad7y.onrender.com/api";
+
+
+// Current quote displayed on screen
 let currentQuote = null;
 
+
+// HTML elements
 const quoteText = document.getElementById("quoteText");
 const quoteAuthor = document.getElementById("quoteAuthor");
 const quoteTopic = document.getElementById("quoteTopic");
@@ -9,23 +19,42 @@ const quoteTopic = document.getElementById("quoteTopic");
 const newQuoteBtn = document.getElementById("newQuoteBtn");
 const favoriteBtn = document.getElementById("favoriteBtn");
 const copyBtn = document.getElementById("copyBtn");
-const refreshBtn = document.getElementById("refreshBtn");
 
+const refreshBtn = document.getElementById("refreshBtn");
 const favoritesList = document.getElementById("favoritesList");
+
 const message = document.getElementById("message");
 
 
-// ===============================
-// Get Random Quote
-// ===============================
+// ==========================================
+// SHOW MESSAGE
+// ==========================================
+
+function showMessage(text) {
+
+    message.textContent = text;
+
+    setTimeout(() => {
+        message.textContent = "";
+    }, 2500);
+}
+
+
+// ==========================================
+// GET RANDOM QUOTE
+// ==========================================
 
 async function getRandomQuote() {
 
     try {
 
-        message.textContent = "Loading...";
+        quoteText.textContent = "Loading quote...";
+        quoteAuthor.textContent = "";
+        quoteTopic.textContent = "";
 
-        const response = await fetch(`${API_URL}/quotes/random`);
+        const response = await fetch(
+            `${API_URL}/quotes/random`
+        );
 
         if (!response.ok) {
             throw new Error("Failed to fetch quote");
@@ -36,253 +65,114 @@ async function getRandomQuote() {
         currentQuote = quote;
 
         quoteText.textContent = `"${quote.text}"`;
-        quoteAuthor.textContent = `— ${quote.author}`;
 
-        if (quote.topic) {
-            quoteTopic.textContent = quote.topic;
-        } else {
-            quoteTopic.textContent = "General";
-        }
+        quoteAuthor.textContent =
+            `— ${quote.author}`;
 
-        message.textContent = "";
+        quoteTopic.textContent =
+            quote.topic || "General";
+
+        favoriteBtn.disabled = false;
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Quote error:",
+            error
+        );
 
-        message.textContent = "Unable to load quote.";
+        quoteText.textContent =
+            "Unable to load quote.";
 
+        quoteAuthor.textContent =
+            "Please try again.";
+
+        quoteTopic.textContent = "";
+
+        showMessage(
+            "❌ Unable to load quote"
+        );
     }
 }
 
 
-// ===============================
-// Add Favorite
-// ===============================
+// ==========================================
+// ADD QUOTE TO FAVORITES
+// ==========================================
 
 async function addFavorite() {
 
     if (!currentQuote) {
-        message.textContent = "Please load a quote first.";
+
+        showMessage(
+            "Please load a quote first."
+        );
+
         return;
     }
 
-    try {
-
-        const response = await fetch(`${API_URL}/favorites`, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                text: currentQuote.text,
-                author: currentQuote.author,
-                topic: currentQuote.topic || "General"
-            })
-
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            message.textContent = data.message;
-            return;
-        }
-
-        message.textContent = "❤️ Quote added to favorites!";
-
-        loadFavorites();
-
-    } catch (error) {
-
-        console.error(error);
-
-        message.textContent = "Failed to save favorite.";
-
-    }
-}
-
-
-// ===============================
-// Load Favorites
-// ===============================
-
-async function loadFavorites() {
 
     try {
 
-        const response = await fetch(`${API_URL}/favorites`);
-
-        const favorites = await response.json();
-
-        favoritesList.innerHTML = "";
-
-        if (favorites.length === 0) {
-
-            favoritesList.innerHTML =
-                `<p class="empty">No favorite quotes yet.</p>`;
-
-            return;
-        }
-
-        favorites.reverse().forEach(quote => {
-
-            const item = document.createElement("div");
-
-            item.className = "favorite-item";
-
-            item.innerHTML = `
-
-                <p>"${quote.text}"</p>
-
-                <strong>— ${quote.author}</strong>
-
-                <div class="favorite-topic">
-                    ${quote.topic || "General"}
-                </div>
-
-                <div class="favorite-actions">
-
-                    <button
-                        class="copy-favorite"
-                        onclick="copyFavorite('${escapeText(quote.text)}', '${escapeText(quote.author)}')">
-                        📋 Copy
-                    </button>
-
-                    <button
-                        class="delete-favorite"
-                        onclick="deleteFavorite(${quote.id})">
-                        🗑 Delete
-                    </button>
-
-                </div>
-            `;
-
-            favoritesList.appendChild(item);
-
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        favoritesList.innerHTML =
-            `<p class="empty">Unable to load favorites.</p>`;
-
-    }
-}
-
-
-// ===============================
-// Delete Favorite
-// ===============================
-
-async function deleteFavorite(id) {
-
-    try {
+        favoriteBtn.disabled = true;
 
         const response = await fetch(
-            `${API_URL}/favorites/${id}`,
+            `${API_URL}/favorites`,
             {
-                method: "DELETE"
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    text:
+                        currentQuote.text,
+
+                    author:
+                        currentQuote.author,
+
+                    topic:
+                        currentQuote.topic ||
+                        "General"
+
+                })
             }
         );
 
-        const data = await response.json();
 
-        message.textContent = data.message;
+        const data =
+            await response.json();
 
-        loadFavorites();
+
+        if (!response.ok) {
+
+            showMessage(
+                `⚠️ ${data.message}`
+            );
+
+            favoriteBtn.disabled = false;
+
+            return;
+        }
+
+
+        showMessage(
+            "❤️ Added to favorites!"
+        );
+
+
+        await loadFavorites();
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Favorite error:",
+            error
+        );
 
-        message.textContent = "Failed to delete favorite.";
-
-    }
-}
-
-
-// ===============================
-// Copy Current Quote
-// ===============================
-
-async function copyCurrentQuote() {
-
-    if (!currentQuote) {
-        return;
-    }
-
-    const text =
-        `"${currentQuote.text}" — ${currentQuote.author}`;
-
-    await navigator.clipboard.writeText(text);
-
-    message.textContent = "📋 Quote copied!";
-}
-
-
-// ===============================
-// Copy Favorite
-// ===============================
-
-async function copyFavorite(text, author) {
-
-    const quote =
-        `"${text}" — ${author}`;
-
-    await navigator.clipboard.writeText(quote);
-
-    message.textContent = "📋 Quote copied!";
-}
-
-
-// ===============================
-// Escape text
-// ===============================
-
-function escapeText(text) {
-
-    return text
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, "&quot;");
-
-}
-
-
-// ===============================
-// Button Events
-// ===============================
-
-newQuoteBtn.addEventListener(
-    "click",
-    getRandomQuote
-);
-
-favoriteBtn.addEventListener(
-    "click",
-    addFavorite
-);
-
-copyBtn.addEventListener(
-    "click",
-    copyCurrentQuote
-);
-
-refreshBtn.addEventListener(
-    "click",
-    loadFavorites
-);
-
-
-// ===============================
-// Initial Load
-// ===============================
-
-getRandomQuote();
-loadFavorites();
+        showMessage(
+            "❌ Failed to
