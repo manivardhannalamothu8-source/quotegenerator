@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>✨ Quote Generator</h1>
+            <p>Discover inspiring quotes and save your favorites.</p>
+        </header>
+
+        <section class="quote-card">
+
+            <div class="quote-icon">❝</div>
+
+            <p id="quoteText">
+                Loading quote...
+            </p>
+
+            <h3 id="quoteAuthor">
+                — Loading...
+            </h3>
+
+            <p id="quoteTopic" class="topic"></p>
+
+            <div class="buttons">
+                <button id="newQuoteBtn">
+                    🔄 New Quote
+                </button>
+
+                <button id="favoriteBtn">
+                    ❤️ Favorite
+                </button>
+
+                <button id="copyBtn">
+                    📋 Copy
+                </button>
+            </div>
+
+            <p id="message"></p>
+
+        </section>
+
+
+        <section class="history">
+
+            <div class="history-header">
+                <h2>❤️ Favorites History</h2>
+
+                <button id="refreshBtn">
+                    🔄 Refresh
+                </button>
+            </div>
+
+            <div id="favoritesList">
+                <p class="empty">
+                    No favorite quotes yet.
+                </p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

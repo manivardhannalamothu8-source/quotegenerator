@@ -1,0 +1,205 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: #222;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 17px;
+    opacity: 0.9;
+}
+
+.quote-card {
+    background: white;
+    border-radius: 20px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.quote-icon {
+    font-size: 55px;
+    color: #667eea;
+}
+
+#quoteText {
+    font-size: 28px;
+    line-height: 1.6;
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+#quoteAuthor {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.topic {
+    display: inline-block;
+    background: #eee;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+#newQuoteBtn {
+    background: #667eea;
+    color: white;
+}
+
+#favoriteBtn {
+    background: #ff4d6d;
+    color: white;
+}
+
+#copyBtn {
+    background: #222;
+    color: white;
+}
+
+#refreshBtn {
+    background: #667eea;
+    color: white;
+}
+
+#message {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+.history {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.history-header h2 {
+    color: #333;
+}
+
+.favorite-item {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.favorite-item p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.favorite-item strong {
+    color: #555;
+}
+
+.favorite-topic {
+    color: #667eea;
+    font-size: 13px;
+}
+
+.favorite-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.favorite-actions button {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+.copy-favorite {
+    background: #222;
+    color: white;
+}
+
+.delete-favorite {
+    background: #ff4d6d;
+    color: white;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 30px;
+}
+
+@media (max-width: 600px) {
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    .quote-card {
+        padding: 25px;
+    }
+
+    #quoteText {
+        font-size: 22px;
+    }
+
+    .history-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
